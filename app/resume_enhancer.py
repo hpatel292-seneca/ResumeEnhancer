@@ -3,6 +3,17 @@ import argparse
 import os
 
 from utils import *
+from config import *
+
+def get_version():
+    """
+    Get the Version for cli tool using --version or -v
+
+    Returns:
+    str: version number
+    """
+    return (f"Resume Enhancer Tool {VERSION}")
+    
 
 ## Main Function
 def main():
@@ -10,10 +21,18 @@ def main():
     parser = argparse.ArgumentParser(description="Enhance resume with description")
 
     # Add the arguments
-    parser.add_argument('--resume', required=True, help='Path to the resume file')
-    parser.add_argument('--description', required=True, help='Path to the description file')
+    parser.add_argument('--resume', help='Path to the resume file')
+    parser.add_argument('--description', help='Path to the description file')
+
+    # Add version arguments
+    parser.add_argument('--version','-v', action='store_true')
+
 
     args=parser.parse_args()
+
+    if args.version:
+        print(get_version())
+        return
 
     # Access the arguments
     resume_path = args.resume
@@ -29,7 +48,7 @@ def main():
         except Exception as e:
             print(f"Error: {e}")
     else:
-        print("Resume or job description not exist")
+        print("Resume or job description at the given path does not exist")
 
 
 
