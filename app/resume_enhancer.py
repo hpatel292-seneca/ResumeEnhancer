@@ -1,9 +1,12 @@
 import sys
 import argparse
 import os
-
+from groq import Groq
 from utils import *
 from config import *
+
+# Setup logger
+logger=setup_logging()
 
 def get_version():
     """
@@ -12,39 +15,137 @@ def get_version():
     Returns:
     str: version number
     """
-    return (f"Resume Enhancer Tool {VERSION}")
+    return (f"{TOOL_NAME} {VERSION}")
+
+def get_help():
+    """
+    Get Help for cli tool
+    Returns:
+    str: help message
+    """
+    return f"""
+    {TOOL_NAME} - A simple CLI tool for Enhancing your Resume based on job description
+
+    Usage:
+    py app/resume_enhancer.py [options]
+
+    Options:
+    -h, --help     show this help message
+    -v, --version  print version
+    --resume       Inputs Resume (Accepts pdf, txt, docx, or doc)
+    --description  Inputs Job Description (Accepts pdf, txt, docx, or doc)
+    """
     
+def usage_error():
+    """
+    Generates a usage error message for incorrect command-line arguments.
+
+    Returns:
+    str: The usage error message.
+    """
+    return f"""
+    Error: Incorrect usage of {TOOL_NAME}.
+
+    Usage:
+    py app/resume_enhancer.py [options]
+
+    Options:
+    -h, --help       Show this help message
+    -v, --version    Print version
+    --resume         Inputs Resume (Accepts pdf, txt, docx, or doc)
+    --description    Inputs Job Description (Accepts pdf, txt, docx, or doc)
+
+    Example:
+    py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt
+    """
+
+def get_response(resume, description, api_key, context=None):
+    try:
+        if api_key is None:
+            raise ValueError("API key is required")
+
+        if resume is None:
+            raise ValueError("Resume is missing")
+
+        if description is None:
+            raise ValueError("Description is required")
+
+        client=Groq(api_key=api_key,)
+
+        system_message = {
+            "role": "system",
+            "content": "You are an AI assistant specializing in optimizing resumes to align with specific job descriptions. Your task is to analyze the provided resume and job description, highlight relevant skills, experiences, and keywords, and suggest improvements to tailor the resume for the job. If the resume lacks required experience, do not fabricate or add fake experience. Ensure that required skills are prominently displayed first in the relevant sections. Retain all certifications included in the resume, and suggest reordering or restructuring content to emphasize qualifications that match the job description."
+        }
+
+        user_message={
+            "role": "user",
+            "content": f"""
+                Resume:
+                {resume}
+
+                Job Description:
+                {description}
+
+                Please review the resume and suggest changes to better match the job description, including adjustments to the summary, skills, experience, and any relevant sections.
+
+            """
+        }
+
+        chat_completion=client.chat.completions.create(
+            messages=[
+                system_message,
+                user_message,
+            ],
+            model="llama3-8b-8192",
+        )
+        return chat_completion.choices[0].message.content
+    except Exception as e:
+        logger.error(f"Error in get_response: {e}")
+
 
 ## Main Function
 def main():
     # Create the parser
-    parser = argparse.ArgumentParser(description="Enhance resume with description")
+    parser = argparse.ArgumentParser(description="Enhance resume with description", add_help=False)
 
     # Add the arguments
     parser.add_argument('--resume', help='Path to the resume file')
     parser.add_argument('--description', help='Path to the description file')
-
-    # Add version arguments
     parser.add_argument('--version','-v', action='store_true')
+    parser.add_argument('--help','-h', action='store_true')
+    parser.add_argument('--api_key', '-a', help='API key required for accessing external services')
 
 
     args=parser.parse_args()
 
+    if args.help:
+        print(get_help())
+        return
+
+    # Check if the version Flag is present
     if args.version:
         print(get_version())
+        logger.info(get_version())
         return
+
+    if not args.resume or not args.description:
+        print(usage_error(), file=sys.stderr)
+        return
+
+    
+
 
     # Access the arguments
     resume_path = args.resume
     description_path = args.description
+    api_key = args.api_key
 
     if os.path.exists(resume_path) and os.path.exists(description_path):
         try:
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
 
-            print("Resume Content: \n" + resume_content)
-            print("Description: \n" + description_content)
+            print(get_response(resume=resume_content, description=description_content, api_key=os.environ.get("api_key")))
         except Exception as e:
             print(f"Error: {e}")
     else:

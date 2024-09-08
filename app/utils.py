@@ -1,4 +1,5 @@
 import os
+import logging
 from docx import Document
 from PyPDF2 import PdfReader
 
@@ -31,3 +32,8 @@ def read_file(file_path):
         return read_word_file(file_path)
     else:
         raise ValueError(f"Unsupported file type: {extension}")
+
+# set up logger
+def setup_logging():
+    logging.basicConfig(level=logging.INFO)
+    return logging.getLogger(__name__)
