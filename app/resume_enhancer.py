@@ -52,11 +52,12 @@ def usage_error():
     Options:
     -h, --help       Show this help message
     -v, --version    Print version
-    --resume         Inputs Resume (Accepts pdf, txt, docx, or doc)
-    --description    Inputs Job Description (Accepts pdf, txt, docx, or doc)
+    --resume         Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
+    --description    Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
+    --api_key, -a    Input Groq API key (Required)
 
     Example:
-    py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt
+    py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt --api_key api_key
     """
 
 def get_response(resume, description, api_key, context=None):
@@ -128,7 +129,7 @@ def main():
         logger.info(get_version())
         return
 
-    if not args.resume or not args.description:
+    if not args.resume or not args.description or not args.api_key:
         print(usage_error(), file=sys.stderr)
         return
 
@@ -145,7 +146,7 @@ def main():
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
 
-            print(get_response(resume=resume_content, description=description_content, api_key=os.environ.get("api_key")))
+            print(get_response(resume=resume_content, description=description_content, api_key=api_key))
         except Exception as e:
             print(f"Error: {e}")
     else:
