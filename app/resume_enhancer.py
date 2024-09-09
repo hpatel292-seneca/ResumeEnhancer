@@ -126,6 +126,7 @@ def main():
     parser.add_argument('--help','-h', action='store_true')
     parser.add_argument('--api_key', '-a', help='API key required for accessing external services')
     parser.add_argument('--model', '-m', help='Model to send requests to')
+    parser.add_argument('--output', '-o', help='allow the user to specify an output file')
 
 
     args=parser.parse_args()
@@ -157,8 +158,11 @@ def main():
         try:
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
-
-            print(get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model))
+            response=get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model)
+            if args.output:
+                write_to_file(args.output, response)
+            else:
+                print(response)
         except Exception as e:
             print(f"Error: {e}")
     else:
