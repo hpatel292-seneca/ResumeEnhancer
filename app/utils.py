@@ -3,6 +3,16 @@ import logging
 from docx import Document
 from PyPDF2 import PdfReader
 
+def write_to_file(file_path, content):
+    extension = os.path.splitext(file_path)[1].lower()
+
+    if extension=='.txt' or extension=="":
+        with open(file_path+'.txt', 'w') as f:
+            f.write(content)
+    else:
+        raise ValueError(f"Unsupported outfile type: {extension}, only .txt files are supported")
+
+
 def read_txt_file(file_path):
     with open(file_path, 'r',encoding='utf-8') as f:
         content=f.read()
