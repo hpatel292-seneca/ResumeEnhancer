@@ -15,7 +15,10 @@ def get_version():
     Returns:
     str: version number
     """
-    return (f"{TOOL_NAME} {VERSION}")
+    try:
+        return (f"{TOOL_NAME} {VERSION}")
+    except Exception as e:
+        logger.error("Failed to get_version", e)
 
 def get_help():
     """
@@ -23,18 +26,22 @@ def get_help():
     Returns:
     str: help message
     """
-    return f"""
-    {TOOL_NAME} - A simple CLI tool for Enhancing your Resume based on job description
+    try:
+        return f"""
+        {TOOL_NAME} - A simple CLI tool for Enhancing your Resume based on job description
 
-    Usage:
-    py app/resume_enhancer.py [options]
+        Usage:
+        py app/resume_enhancer.py [options]
 
-    Options:
-    -h, --help     show this help message
-    -v, --version  print version
-    --resume       Inputs Resume (Accepts pdf, txt, docx, or doc)
-    --description  Inputs Job Description (Accepts pdf, txt, docx, or doc)
-    """
+        Options:
+        -h, --help     show this help message
+        -v, --version  print version
+        --resume       Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
+        --description  Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
+        --api_key, -a    Input Groq API key (Required)
+        """
+    except Exception as e:
+        logger.error("Failed to get_help", e)
     
 def usage_error():
     """
@@ -43,24 +50,27 @@ def usage_error():
     Returns:
     str: The usage error message.
     """
-    return f"""
-    Error: Incorrect usage of {TOOL_NAME}.
+    try:
+        return f"""
+        Error: Incorrect usage of {TOOL_NAME}.
 
-    Usage:
-    py app/resume_enhancer.py [options]
+        Usage:
+        py app/resume_enhancer.py [options]
 
-    Options:
-    -h, --help       Show this help message
-    -v, --version    Print version
-    --resume         Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
-    --description    Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
-    --api_key, -a    Input Groq API key (Required)
+        Options:
+        -h, --help       Show this help message
+        -v, --version    Print version
+        --resume         Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
+        --description    Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
+        --api_key, -a    Input Groq API key (Required)
 
-    Example:
-    py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt --api_key api_key
-    """
+        Example:
+        py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt --api_key api_key
+        """
+    except Exception as e:
+        logger.error("Failed to usage_error", e)
 
-def get_response(resume, description, api_key, context=None):
+def get_response(resume, description, api_key, model=None, context=None):
     try:
         if api_key is None:
             raise ValueError("API key is required")
@@ -97,7 +107,7 @@ def get_response(resume, description, api_key, context=None):
                 system_message,
                 user_message,
             ],
-            model="llama3-8b-8192",
+            model= model if model else "llama3-8b-8192",
         )
         return chat_completion.choices[0].message.content
     except Exception as e:
@@ -115,6 +125,7 @@ def main():
     parser.add_argument('--version','-v', action='store_true')
     parser.add_argument('--help','-h', action='store_true')
     parser.add_argument('--api_key', '-a', help='API key required for accessing external services')
+    parser.add_argument('--model', '-m', help='Model to send requests to')
 
 
     args=parser.parse_args()
@@ -141,12 +152,13 @@ def main():
     description_path = args.description
     api_key = args.api_key
 
+
     if os.path.exists(resume_path) and os.path.exists(description_path):
         try:
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
 
-            print(get_response(resume=resume_content, description=description_content, api_key=api_key))
+            print(get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model))
         except Exception as e:
             print(f"Error: {e}")
     else:
