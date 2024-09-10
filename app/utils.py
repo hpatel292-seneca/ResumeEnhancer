@@ -6,7 +6,10 @@ from PyPDF2 import PdfReader
 def write_to_file(file_path, content):
     extension = os.path.splitext(file_path)[1].lower()
 
-    if extension=='.txt' or extension=="":
+    if extension=='.txt':
+        with open(file_path, 'w') as f:
+            f.write(content)
+    elif extension=="":
         with open(file_path+'.txt', 'w') as f:
             f.write(content)
     else:
