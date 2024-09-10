@@ -70,7 +70,7 @@ def usage_error():
     except Exception as e:
         logger.error("Failed to usage_error", e)
 
-def get_response(resume, description, api_key, model=None, context=None):
+def get_response(resume, description, api_key, model=None, temperature=0.5, max_token=1024):
     try:
         if api_key is None:
             raise ValueError("API key is required")
@@ -108,6 +108,9 @@ def get_response(resume, description, api_key, model=None, context=None):
                 user_message,
             ],
             model= model if model else "llama3-8b-8192",
+            temperature=temperature,
+            max_tokens=max_token,
+            
         )
         return chat_completion.choices[0].message.content
     except Exception as e:
@@ -127,6 +130,8 @@ def main():
     parser.add_argument('--api_key', '-a', help='API key required for accessing external services')
     parser.add_argument('--model', '-m', help='Model to send requests to')
     parser.add_argument('--output', '-o', help='allow the user to specify an output file')
+    parser.add_argument('--temperature', '-t', help='allow to Controls randomness: lowering results in less random completions')
+    parser.add_argument('--maxTokens', '-mt', help='The maximum number of tokens to generate')
 
 
     args=parser.parse_args()
@@ -152,13 +157,20 @@ def main():
     resume_path = args.resume
     description_path = args.description
     api_key = args.api_key
+    temperature = args.temperature
+    maxTokens = args.maxTokens
+    if temperature:
+        temperature = float(args.temperature)
+    
+    if maxTokens:
+        maxTokens = int(args.maxTokens)
 
 
     if os.path.exists(resume_path) and os.path.exists(description_path):
         try:
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
-            response=get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model)
+            response=get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens)
             if args.output:
                 write_to_file(args.output, response)
             else:
