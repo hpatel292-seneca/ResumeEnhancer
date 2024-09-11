@@ -7,15 +7,8 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Usage](#usage)
+  - [Requirements](#prerequisties)
   - [Options](#options)
-  - [Example](#example)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Error Handling](#error-handling)
-- [Logging](#logging)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
