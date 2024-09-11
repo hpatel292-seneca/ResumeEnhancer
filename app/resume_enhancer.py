@@ -39,6 +39,10 @@ def get_help():
         --resume       Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
         --description  Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
         --api_key, -a    Input Groq API key (Required)
+        -m, --model          Input Model you want to use 
+        -o, --output         Output response to provided file (Accepts .txt)
+        -t, --temperature    Input Temperature to pass while making chat completion request.
+        -mt, --maxTokens     Maximum number of Token.
         """
     except Exception as e:
         logger.error("Failed to get_help", e)
@@ -58,11 +62,15 @@ def usage_error():
         py app/resume_enhancer.py [options]
 
         Options:
-        -h, --help       Show this help message
-        -v, --version    Print version
-        --resume         Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
-        --description    Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
-        --api_key, -a    Input Groq API key (Required)
+        -h, --help           Show this help message
+        -v, --version        Print version
+        --resume             Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
+        --description        Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
+        -a, --api_key        Input Groq API key (Required)
+        -m, --model          Input Model you want to use 
+        -o, --output         Output response to provided file (Accepts .txt)
+        -t, --temperature    Input Temperature to pass while making chat completion request.
+        -mt, --maxTokens     Maximum number of Token.
 
         Example:
         py app/resume_enhancer.py --resume path/to/resume.docx --description path/to/description.txt --api_key api_key
@@ -123,10 +131,10 @@ def main():
     parser = argparse.ArgumentParser(description="Enhance resume with description", add_help=False)
 
     # Add the arguments
+    parser.add_argument('--help','-h', action='store_true')
+    parser.add_argument('--version','-v', action='store_true')
     parser.add_argument('--resume', help='Path to the resume file')
     parser.add_argument('--description', help='Path to the description file')
-    parser.add_argument('--version','-v', action='store_true')
-    parser.add_argument('--help','-h', action='store_true')
     parser.add_argument('--api_key', '-a', help='API key required for accessing external services')
     parser.add_argument('--model', '-m', help='Model to send requests to')
     parser.add_argument('--output', '-o', help='allow the user to specify an output file')
