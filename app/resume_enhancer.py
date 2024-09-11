@@ -78,7 +78,7 @@ def usage_error():
     except Exception as e:
         logger.error("Failed to usage_error", e)
 
-def get_response(resume, description, api_key, model=None, temperature=0.5, max_token=1024):
+def get_response(resume, description, api_key, model=None, temperature=0.5, max_token=1024, output=None):
     try:
         if api_key is None:
             raise ValueError("API key is required")
@@ -118,9 +118,20 @@ def get_response(resume, description, api_key, model=None, temperature=0.5, max_
             model= model if model else "llama3-8b-8192",
             temperature=temperature,
             max_tokens=max_token,
-            
+            stream=True,
         )
-        return chat_completion.choices[0].message.content
+        content=""
+        for chunk in chat_completion:
+            chunk_content = chunk.choices[0].delta.content  # Store the content in a variable
+            if chunk_content:  # Check if chunk_content is not None or empty
+                if output is None:
+                    print(chunk_content, end="")
+                else:
+                    content += chunk_content  # Append content for writing to file
+        if output is not None:
+            write_to_file(output, content)
+
+        # return chat_completion.choices[0].message.content
     except Exception as e:
         logger.error(f"Error in get_response: {e}")
 
@@ -178,11 +189,11 @@ def main():
         try:
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
-            response=get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens)
-            if args.output:
-                write_to_file(args.output, response)
-            else:
-                print(response)
+            get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens, output=args.output)
+            # if args.output:
+            #     write_to_file(args.output, response)
+            # else:
+            #     print(response)
         except Exception as e:
             print(f"Error: {e}")
     else:
