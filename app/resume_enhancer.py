@@ -1,6 +1,8 @@
 import sys
 import argparse
 import os
+import requests
+import json
 from groq import Groq
 from utils import *
 from config import *
@@ -134,7 +136,15 @@ def get_response(resume, description, api_key, model=None, temperature=0.5, max_
         # return chat_completion.choices[0].message.content
     except Exception as e:
         logger.error(f"Error in get_response: {e}")
-
+    
+def check_models(api_key):
+    url = "https://api.groq.com/openai/v1/models"
+    headers={
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    response=requests.get(url, headers=headers)
+    print(json.dumps(response.json(), indent=4))
 
 ## Main Function
 def main():
@@ -151,7 +161,7 @@ def main():
     parser.add_argument('--output', '-o', help='allow the user to specify an output file')
     parser.add_argument('--temperature', '-t', help='allow to Controls randomness: lowering results in less random completions')
     parser.add_argument('--maxTokens', '-mt', help='The maximum number of tokens to generate')
-
+    parser.add_argument('--models', action='store_true', help='List available models')
 
     args=parser.parse_args()
 
@@ -163,6 +173,13 @@ def main():
     if args.version:
         print(get_version())
         logger.info(get_version())
+        return
+
+    if args.models:
+        if not args.api_key:
+            print("You must specify a api key for checking available Models")
+        else:
+            check_models(args.api_key)
         return
 
     if not args.resume or not args.description or not args.api_key:
