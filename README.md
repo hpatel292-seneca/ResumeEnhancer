@@ -65,3 +65,29 @@ python app/resume_enhancer.py --resume path_to_resume --description path_to_desc
 | `--output`         | `-o`       | PATH   | Specify an output file to save the response (Optional, accepts `.txt`)       | None                    |
 | `--temperature`    | `-t`       | Float  | Controls the randomness of the AI's responses (Optional)                    | `0.5`                   |
 | `--maxTokens`      | `-mt`      | Int    | Maximum number of tokens for the AI response (Optional)                     | `1024`                  |
+
+
+## Error Handling
+
+- **Invalid Input Files**: The tool checks if the specified input files exist and are in the correct format.
+- **API Key Validation**: If the API key is missing or invalid, the tool will prompt for correction.
+- **Command-Line Errors**: Usage errors are reported with a helpful error message indicating the correct usage of the tool.
+
+## Logging
+
+The tool uses a logging system to track errors and important events. Logs are generated using the Python logging module and can be customized by modifying the `setup_logging()` function in the `utils` module.
+
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature`.
+3. Commit your changes: `git commit -am 'Add new feature'`.
+4. Push to the branch: `git push origin feature/your-feature`.
+5. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
