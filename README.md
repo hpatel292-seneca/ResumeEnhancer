@@ -9,6 +9,10 @@
 - [Usage](#usage)
   - [Requirements](#prerequisties)
   - [Options](#options)
+- [Error Handling](#error-handling)
+- [Logging](#logging)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Overview
 
