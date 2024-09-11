@@ -1,0 +1,91 @@
+HOOPP (Healthcare of Ontario Pension Plan) logo
+HOOPP (Healthcare of Ontario Pension Plan)
+Systems Developer 
+Toronto, ON · Reposted 22 hours ago · Over 100 applicants
+HybridMatches your job preferences, workplace type is Hybrid.  Full-timeMatches your job preferences, job type is Full-time.  Mid-Senior level
+121 connections work here · 76 school alumni work here
+3 of 5 skills match your profile - you may be a good fit
+See how you compare to over 100 other applicants. Try Premium for CA$0
+
+
+
+Am I a good fit for this job?
+
+How can I best position myself for this job?
+
+Tell me more about HOOPP (He...
+
+
+Apply
+
+Save
+Save Systems Developer  at HOOPP (Healthcare of Ontario Pension Plan)
+Share
+Show more options
+Systems Developer
+HOOPP (Healthcare of Ontario Pension Plan) · Toronto, ON (Hybrid)
+
+Apply
+
+Save
+Save Systems Developer  at HOOPP (Healthcare of Ontario Pension Plan)
+Show more options
+About the job
+Why you’ll love working here:
+
+high-performance, people-focused culture
+our commitment that equity, diversity, and inclusion are fundamental to our work environment and business success, which helps employees feel valued and empowered to be their authentic selves
+learning and development initiatives, including workshops, Speaker Series events and access to LinkedIn Learning, that support employees’ career growth
+membership in HOOPP’s world class defined benefit pension plan, which can serve as an important part of your retirement security
+competitive, 100% company-paid extended health and dental benefits for permanent employees, including coverage supporting our team's diversity and mental health (e.g., gender affirmation, fertility and drug treatment, psychological support benefits of $2,500 per year, and newly extended maternity/parental leave top of 26 weeks)
+optional post-retirement health and dental benefits subsidized at 50%
+yoga classes, meditation workshops, nutritional consultations, and wellness seminars
+access to an annual wellness reimbursement program for health and wellness-related expenses for permanent and temporary employees
+the opportunity to make a difference and help take care of those who care for us, by providing a financially secure retirement for Ontario healthcare workers
+
+Job Summary
+
+Are you a bold, quick-thinking, and driven individual seeking growth and challenge through collaboration with dynamic teams? If you’re intrinsically enthusiastic about being a change agent and influencing growth, we want to hear from you! The IT Pension Solutions Group at HOOPP is looking for an experienced individual to fill a permanent, full-time Systems Developer role. This position involves enabling Front-to-Back-office activities, holistically supporting HOOPP Pension Platform DevOps activities. The group values challenging the status quo, innovative solutions, team collaboration, and practicality.
+
+What you will do:
+
+Support and Maintenance
+
+Participate in day-to-day release, configuration, and support activities for the platform.
+Be part of the on-call rotation schedule.
+Collaborate closely with users to continuously improve system stability and meet business needs.
+Resolve complex production issues across multiple systems and technologies.
+
+Agile and Collaboration
+
+Actively participate in Agile Scrum practices, including daily standups, backlog refinement, planning, and sprint retrospectives.
+Contribute during brainstorming and planning meetings, write wiki articles, and participate in issue and team retrospectives.
+Foster a safe, supportive, and participatory environment that promotes ongoing mutual respect.
+Ask powerful questions, create awareness, and guide individuals and groups in exploring options and decision-making.
+
+Development and Delivery
+
+Assist in delivering new features and resolving issues.
+Build, launch, and support significant features, including planning, resolving dependencies with other teams, educating peers and stakeholders, and mitigating potential issues.
+Quickly learn, evaluate, and apply new concepts and technologies.
+
+Our Technology Stack
+
+Languages and Scripting: PowerShell, Python, SQL.
+Web and Application Servers: IIS.
+CRM and ERP Systems: MS Dynamics CRM, MS Dynamics GP.
+Collaboration and Content Management: MS SharePoint Server.
+Infrastructure as Code: Terraform.
+Application Performance Management: Azure Application Insights (or similar APM tools).
+
+What you bring:
+
+Degree in Computer Science, Engineering, or a related field.
+3+ years of experience in a development and/or operations role preferably in mission critical systems.
+Possesses strong interpersonal and communication skills, with an ability to take end-to-end ownership.
+Skilled in modern development tools and practices, such as git, CI/CD, and unit testing.
+Proficient with cloud platforms like Azure, AWS, or GCP.
+Experience working with pension plan providers is preferred.
+Strong collaboration skills, demonstrated by building bridges and fostering relationships with IT teams, business stakeholders, and external partners to propel projects to success.
+Analytical mindset and innovative thinking to devise effective and efficient solutions to challenges, including decision-making.
+Ability to translate technical specifications into business benefits to lead cross-functional teams, ensuring projects drive significant value for the organization.
