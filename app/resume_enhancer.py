@@ -38,6 +38,7 @@ def get_help():
         Options:
         -h, --help     show this help message
         -v, --version  print version
+        --models       Print Available Models
         --resume       Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
         --description  Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
         --api_key, -a    Input Groq API key (Required)
@@ -66,6 +67,7 @@ def usage_error():
         Options:
         -h, --help           Show this help message
         -v, --version        Print version
+        --models             Print Avaliable Models
         --resume             Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
         --description        Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
         -a, --api_key        Input Groq API key (Required)
