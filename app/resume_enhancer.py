@@ -129,7 +129,7 @@ def get_response(resume, description, api_key, model=None, temperature=0.5, max_
             chunk_content = chunk.choices[0].delta.content  # Store the content in a variable
             if chunk_content:  # Check if chunk_content is not None or empty
                 if output is None:
-                    logger.info(chunk_content, end="")
+                    print(chunk_content, end="")
                 else:
                     content += chunk_content  # Append content for writing to file
         if output is not None:
@@ -146,7 +146,7 @@ def check_models(api_key):
         "Content-Type": "application/json"
     }
     response=requests.get(url, headers=headers)
-    logger.info(json.dumps(response.json(), indent=4))
+    print(json.dumps(response.json(), indent=4))
 
 ## Main Function
 def main():
@@ -168,27 +168,29 @@ def main():
     args=parser.parse_args()
 
     if args.help:
-        logger.info(get_help())
+        print(get_help())
         return
 
     # Check if the version Flag is present
     if args.version:
-        logger.info(get_version())
+        print(get_version())
+        return
+    
+    if not args.api_key:
+        logger.error("You must specify a api key")
         return
 
     if args.models:
-        if not args.api_key:
-            logger.error("You must specify a api key for checking available Models")
-        else:
-            check_models(args.api_key)
+        check_models(args.api_key)
         return
-
-    if not args.resume or not args.description or not args.api_key:
-        logger.error(usage_error(), file=sys.stderr)
-        return
-
     
+    if not args.resume:
+        logger.error("You must provide a resume path for processing")
+        return
 
+    if not args.description:
+        logger.error("You must provide a job description file path for processing")
+        return
 
     # Access the arguments
     resume_path = args.resume
@@ -201,17 +203,21 @@ def main():
     
     if maxTokens:
         maxTokens = int(args.maxTokens)
+    
+    if not os.path.exists(resume_path):
+        logger.error("Could not find resume file at provided path")
+        return
 
-
-    if os.path.exists(resume_path) and os.path.exists(description_path):
-        try:
-            resume_content = read_file(resume_path)
-            description_content = read_file(description_path)
-            get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens, output=args.output)
-        except Exception as e:
-            logger.error(f"Error: {e}")
-    else:
-        logger.error("Resume or job description at the given path does not exist")
+    if not os.path.exists(description_path):
+        logger.error("Could not find description file at provided path")
+        return
+    
+    try:
+        resume_content = read_file(resume_path)
+        description_content = read_file(description_path)
+        get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens, output=args.output)
+    except Exception as e:
+        logger.error(f"Error: {e}")
 
 
 
