@@ -69,6 +69,7 @@ python app/resume_enhancer.py --resume path_to_resume --description path_to_desc
 | `--output`         | `-o`       | PATH   | Specify an output file to save the response (Optional, accepts `.txt`)       | None                    |
 | `--temperature`    | `-t`       | Float  | Controls the randomness of the AI's responses (Optional)                    | `0.5`                   |
 | `--maxTokens`      | `-mt`      | Int    | Maximum number of tokens for the AI response (Optional)                     | `1024`                  |
+| `--models`         | -          | Flag   | List available models                                                       | -                       |
 
 
 ## Error Handling
