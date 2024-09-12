@@ -127,7 +127,7 @@ def get_response(resume, description, api_key, model=None, temperature=0.5, max_
             chunk_content = chunk.choices[0].delta.content  # Store the content in a variable
             if chunk_content:  # Check if chunk_content is not None or empty
                 if output is None:
-                    print(chunk_content, end="")
+                    logger.info(chunk_content, end="")
                 else:
                     content += chunk_content  # Append content for writing to file
         if output is not None:
@@ -144,7 +144,7 @@ def check_models(api_key):
         "Content-Type": "application/json"
     }
     response=requests.get(url, headers=headers)
-    print(json.dumps(response.json(), indent=4))
+    logger.info(json.dumps(response.json(), indent=4))
 
 ## Main Function
 def main():
@@ -166,24 +166,23 @@ def main():
     args=parser.parse_args()
 
     if args.help:
-        print(get_help())
+        logger.info(get_help())
         return
 
     # Check if the version Flag is present
     if args.version:
-        print(get_version())
         logger.info(get_version())
         return
 
     if args.models:
         if not args.api_key:
-            print("You must specify a api key for checking available Models")
+            logger.error("You must specify a api key for checking available Models")
         else:
             check_models(args.api_key)
         return
 
     if not args.resume or not args.description or not args.api_key:
-        print(usage_error(), file=sys.stderr)
+        logger.error(usage_error(), file=sys.stderr)
         return
 
     
@@ -207,14 +206,10 @@ def main():
             resume_content = read_file(resume_path)
             description_content = read_file(description_path)
             get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens, output=args.output)
-            # if args.output:
-            #     write_to_file(args.output, response)
-            # else:
-            #     print(response)
         except Exception as e:
-            print(f"Error: {e}")
+            logger.error(f"Error: {e}")
     else:
-        print("Resume or job description at the given path does not exist")
+        logger.error("Resume or job description at the given path does not exist")
 
 
 
