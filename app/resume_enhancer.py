@@ -179,6 +179,10 @@ def main():
     if not args.api_key:
         logger.error("You must specify a api key")
         return
+    
+    if not is_valid_api_key(args.api_key):
+        logger.error("you must provide a valid api key")
+        return
 
     if args.models:
         check_models(args.api_key)

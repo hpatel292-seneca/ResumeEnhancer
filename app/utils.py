@@ -1,5 +1,6 @@
 import os
 import logging
+import re
 from docx import Document
 from PyPDF2 import PdfReader
 
@@ -50,3 +51,6 @@ def read_file(file_path):
 def setup_logging():
     logging.basicConfig(level=logging.INFO)
     return logging.getLogger(__name__)
+
+def is_valid_api_key(api_key):
+    return bool(re.match(r'^[A-Za-z0-9]{20,40}$', api_key))
