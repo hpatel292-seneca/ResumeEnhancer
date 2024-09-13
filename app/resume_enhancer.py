@@ -157,6 +157,18 @@ def check_models(api_key):
     response=requests.get(url, headers=headers)
     print(json.dumps(response.json(), indent=4))
 
+def prompt_for_missing_args(args):
+    if not args.api_key:
+        args.api_key = input("Please enter your API key: ")
+    
+    if not args.resume:
+        args.resume = input("Please enter the path to the resume file: ")
+
+    if not args.description:
+        args.description = input("Please enter the path to the job description file: ")
+
+    return args
+
 ## Main Function
 def main():
     # Create the parser
@@ -185,17 +197,20 @@ def main():
         print(get_version())
         return
     
-    if not args.api_key:
-        logger.error("You must specify a api key")
+    if args.models:
+        if not args.api_key:
+            logger.error("You must specify a api key")
+            return
+        check_models(args.api_key)
         return
+    
+    args = prompt_for_missing_args(args)
     
     if not is_valid_api_key(args.api_key):
         logger.error("you must provide a valid api key")
         return
 
-    if args.models:
-        check_models(args.api_key)
-        return
+    
     
     if not args.resume:
         logger.error("You must provide a resume path for processing")
