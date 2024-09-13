@@ -75,7 +75,3 @@ def setup_logging():
     logger.addHandler(console_handler)
 
     return logger
-
-
-def is_valid_api_key(api_key):
-    return bool(re.match(r'^[A-Za-z0-9]{20,40}$', api_key))

@@ -4,3 +4,4 @@ groq
 openai
 requests
 colorama
+halo

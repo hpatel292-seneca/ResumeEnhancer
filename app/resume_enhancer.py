@@ -3,6 +3,7 @@ import argparse
 import os
 import requests
 import json
+from halo import Halo
 from groq import Groq
 from utils import *
 from config import *
@@ -92,7 +93,10 @@ def usage_error():
         logger.error("Failed to usage_error", e)
 
 def get_response(resume, description, api_key, model=None, temperature=0.5, max_token=1024, output=None):
+    # Setup Halo
+    spinner=Halo(text="Processing", spinner='dots')
     try:
+        spinner.start() # Start Halo Spinner
         if api_key is None:
             raise ValueError("API key is required")
 
@@ -146,8 +150,11 @@ def get_response(resume, description, api_key, model=None, temperature=0.5, max_
 
         # return chat_completion.choices[0].message.content
     except Exception as e:
+        spinner.fail("Error in get_response")
         logger.error(f"Error in get_response: {e}")
-    
+    finally:
+        spinner.stop()
+
 def check_models(api_key):
     url = "https://api.groq.com/openai/v1/models"
     headers={
@@ -206,9 +213,6 @@ def main():
     
     args = prompt_for_missing_args(args)
     
-    if not is_valid_api_key(args.api_key):
-        logger.error("you must provide a valid api key")
-        return
 
     
     
@@ -243,6 +247,8 @@ def main():
     try:
         resume_content = read_file(resume_path)
         description_content = read_file(description_path)
+
+        
         get_response(resume=resume_content, description=description_content, api_key=api_key, model=args.model, temperature=temperature, max_token=maxTokens, output=args.output)
     except Exception as e:
         logger.error(f"Error: {e}")
