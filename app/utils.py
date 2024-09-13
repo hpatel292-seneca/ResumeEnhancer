@@ -49,8 +49,11 @@ def read_file(file_path):
 
 # set up logger
 def setup_logging():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[logging.StreamHandler()]
+    )
     return logging.getLogger(__name__)
-
 def is_valid_api_key(api_key):
     return bool(re.match(r'^[A-Za-z0-9]{20,40}$', api_key))
