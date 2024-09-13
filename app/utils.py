@@ -2,7 +2,21 @@ import os
 import logging
 import re
 from docx import Document
+from colorama import Fore, Style
 from PyPDF2 import PdfReader
+
+# Custom formatter for colorized logging
+class ColoredFormatter(logging.Formatter):
+    COLORS = {
+        'INFO': Fore.GREEN,
+        'WARNING': Fore.YELLOW,
+        'ERROR': Fore.RED,
+    }
+
+    def format(self, record):
+        color=self.COLORS.get(record.levelname, Fore.WHITE)
+        message=super().format(record)
+        return f"{color}{message}{Style.RESET_ALL}"
 
 def write_to_file(file_path, content):
     extension = os.path.splitext(file_path)[1].lower()
@@ -49,11 +63,19 @@ def read_file(file_path):
 
 # set up logger
 def setup_logging():
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler()]
-    )
-    return logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO) 
+
+    formatter = ColoredFormatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+
+    logger.addHandler(console_handler)
+
+    return logger
+
+
 def is_valid_api_key(api_key):
     return bool(re.match(r'^[A-Za-z0-9]{20,40}$', api_key))
