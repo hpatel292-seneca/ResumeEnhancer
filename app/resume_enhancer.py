@@ -30,22 +30,31 @@ def get_help():
     """
     try:
         return f"""
-        {TOOL_NAME} - A simple CLI tool for Enhancing your Resume based on job description
+        {TOOL_NAME} - A CLI tool for enhancing resumes based on job descriptions
 
         Usage:
         py app/resume_enhancer.py [options]
 
         Options:
-        -h, --help     show this help message
-        -v, --version  print version
-        --models       Print Available Models
-        --resume       Inputs Resume (Accepts pdf, txt, docx, or doc) (Required)
-        --description  Inputs Job Description (Accepts pdf, txt, docx, or doc) (Required)
-        --api_key, -a    Input Groq API key (Required)
-        -m, --model          Input Model you want to use 
-        -o, --output         Output response to provided file (Accepts .txt)
-        -t, --temperature    Input Temperature to pass while making chat completion request.
-        -mt, --maxTokens     Maximum number of Token.
+        -h, --help            Show this help message
+        -v, --version         Print version
+        --models              List available models
+        --resume              Input resume (pdf, txt, docx, doc) (Required)
+        --description         Input job description (pdf, txt, docx, doc) (Required)
+        --api_key, -a         Input Groq API key (Required)
+        -m, --model           Specify model to use 
+        -o, --output          Output to specified file (txt or json)
+        -t, --temperature     Set completion randomness (default 0.5)
+        -mt, --maxTokens      Maximum number of tokens (default 1024)
+
+        Examples:
+        1. Basic Usage:
+           py app/resume_enhancer.py --resume resume.docx --description description.txt --api_key YOUR_API_KEY
+
+        2. Specify Model and Output:
+           py app/resume_enhancer.py --resume resume.pdf --description description.pdf --api_key YOUR_API_KEY --model llama3-8b-8192 --output output.txt
+
+        Note: Get your Groq API key from https://groq.com/developers
         """
     except Exception as e:
         logger.error("Failed to get_help", e)
