@@ -7,10 +7,10 @@ def write_to_file(file_path, content):
     extension = os.path.splitext(file_path)[1].lower()
 
     if extension=='.txt':
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
     elif extension=="":
-        with open(file_path+'.txt', 'w') as f:
+        with open(file_path+'.txt', 'w', encoding='utf-8') as f:
             f.write(content)
     else:
         raise ValueError(f"Unsupported outfile type: {extension}, only .txt files are supported")
