@@ -17,6 +17,8 @@
 ## Overview
 
 The **Resume Enhancer** is a command-line interface (CLI) tool designed to optimize and tailor resumes based on specific job descriptions. By leveraging AI capabilities, this tool analyzes the content of a resume and compares it with a job description to suggest improvements, highlight relevant skills, and emphasize qualifications that match the desired role.
+### Demo Video
+[Demo](https://youtu.be/W5IWO4vnTKA)
 
 ## Features
 
