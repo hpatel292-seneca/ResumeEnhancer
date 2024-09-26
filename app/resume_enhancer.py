@@ -87,6 +87,7 @@ def get_response(
     max_token=1024,
     output=None,
     token_usage=False,
+    stream=False
 ):
     spinner=Halo(text="Processing", spinner='dots')
     try:
@@ -131,14 +132,14 @@ def get_response(
         for chunk in chat_completion:
             chunk_content = chunk.choices[0].delta.content
             if chunk_content:
-                if output:
+                if output or stream==False:
                     content += chunk_content
                 else:
                     print(chunk_content, end="")
 
         if output:
             write_to_file(output, content)
-        else:
+        elif stream==False:
         # Print all the fetched content on the screen
             print("\n\n", content)
 
@@ -217,7 +218,9 @@ def main():
     parser.add_argument(
         "--token-usage", "-tu", action="store_true", help="Show token usage"
     )
-
+    parser.add_argument(
+        "--stream", "-s", action="store_true", help="Allow streaming"
+    )
     args = parser.parse_args()
 
     if args.help:
@@ -266,6 +269,7 @@ def main():
             max_token=args.maxTokens,
             output=args.output,
             token_usage=args.token_usage,
+            stream=args.stream
         )
     except Exception as e:
         logger.error(f"Error: {e}")
