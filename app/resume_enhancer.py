@@ -129,8 +129,11 @@ def get_response(
             if chunk_content:
                 content += chunk_content
 
+        if output:
+            write_to_file(output, content)
+        else:
         # Print all the fetched content on the screen
-        print("\n\n", content)
+            print("\n\n", content)
 
         # Print colored token usage info
         # Ref Doc: https://codehs.com/tutorial/andy/ansi-colors
