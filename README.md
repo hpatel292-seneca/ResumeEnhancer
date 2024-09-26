@@ -82,6 +82,7 @@ python app/resume_enhancer.py --resume path_to_resume --description path_to_desc
 | `--maxTokens`   | `-mt`    | Int    | Maximum number of tokens for the AI response (Optional)                                   | `1024`           |
 | `--models`      | -        | Flag   | List available models                                                                     | -                |
 | `--token-usage` | `-tu`    | Flag   | Displays token usage statistics to the user via `stderr`                                  | -                |
+| `--stream`      | `-s`     | Flag   | Allow Streaming of response                                                               | `No Streaming`   |
 
 ## Error Handling
 
