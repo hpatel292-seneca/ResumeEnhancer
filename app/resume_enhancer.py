@@ -90,7 +90,7 @@ def get_response(
     stream=False
 ):
     spinner=Halo(text="Processing", spinner='dots')
-    spinner.start()
+    
     if api_key is None:
         raise ValueError("API key is required")
 
@@ -106,6 +106,7 @@ def get_response(
     
     for model in models:
         print(f"Processing with model: {model}")
+        spinner.start()
         try:
             
             client = Groq(api_key=api_key)
@@ -148,7 +149,7 @@ def get_response(
 
             if output:
                 write_to_file(f"{output}_{model}", content)
-            else:
+            elif stream==False:
             # Print all the fetched content on the screen
                 print(content)
 
