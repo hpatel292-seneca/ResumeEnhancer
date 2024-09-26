@@ -82,7 +82,7 @@ def get_response(
     resume,
     description,
     api_key,
-    model=None,
+    models=None,
     temperature=0.5,
     max_token=1024,
     output=None,
@@ -90,84 +90,94 @@ def get_response(
     stream=False
 ):
     spinner=Halo(text="Processing", spinner='dots')
-    try:
-        spinner.start()
-        if api_key is None:
-            raise ValueError("API key is required")
+    spinner.start()
+    if api_key is None:
+        raise ValueError("API key is required")
 
-        if resume is None:
-            raise ValueError("Resume is missing")
+    if resume is None:
+        raise ValueError("Resume is missing")
 
-        if description is None:
-            raise ValueError("Description is required")
+    if description is None:
+        raise ValueError("Description is required")
 
-        client = Groq(api_key=api_key)
+    
+    if not models:
+        models = ["llama3-8b-8192"]
+    
+    for model in models:
+        print(f"Processing with model: {model}")
+        try:
+            
+            client = Groq(api_key=api_key)
 
-        system_message = {
-            "role": "system",
-            "content": "You are an AI assistant specializing in optimizing resumes to align with specific job descriptions...",
-        }
+            system_message = {
+                "role": "system",
+                "content": "You are an AI assistant specializing in optimizing resumes to align with specific job descriptions...",
+            }
 
-        user_message = {
-            "role": "user",
-            "content": f"""
-                Resume:
-                {resume}
+            user_message = {
+                "role": "user",
+                "content": f"""
+                    Resume:
+                    {resume}
 
-                Job Description:
-                {description}
-            """,
-        }
+                    Job Description:
+                    {description}
+                """,
+            }
 
-        chat_completion = client.chat.completions.create(
-            messages=[system_message, user_message],
-            model=model if model else "llama3-8b-8192",
-            temperature=temperature,
-            max_tokens=max_token,
-            stream=True,
-        )
-        content = ""
-        spinner.stop()
-        print("\n")
-        for chunk in chat_completion:
-            chunk_content = chunk.choices[0].delta.content
-            if chunk_content:
-                if output or stream==False:
-                    content += chunk_content
-                else:
-                    print(chunk_content, end="")
-
-        if output:
-            write_to_file(output, content)
-        elif stream==False:
-        # Print all the fetched content on the screen
-            print("\n\n", content)
-
-        # Print colored token usage info
-        # Ref Doc: https://codehs.com/tutorial/andy/ansi-colors
-        if token_usage:
-            usage = chunk.x_groq.usage
-
-            formatted_usage = (
-                "\n\033[92m"
-                "Token Usage:\n"
-                "-------------\n"
-                f"- Completion Tokens: {usage.completion_tokens}\n"
-                f"- Prompt Tokens: {usage.prompt_tokens}\n"
-                f"- Total Tokens: {usage.total_tokens}\n\n"
-                "Timing:\n"
-                "-------\n"
-                f"- Completion Time: {usage.completion_time:.3f} seconds\n"
-                f"- Prompt Time: {usage.prompt_time:.3f} seconds\n"
-                f"- Queue Time: {usage.queue_time:.3f} seconds\n"
-                f"- Total Time: {usage.total_time:.3f} seconds\n"
-                "\033[0m"
+            chat_completion = client.chat.completions.create(
+                messages=[system_message, user_message],
+                model=model,
+                temperature=temperature,
+                max_tokens=max_token,
+                stream=True,
             )
+            content = ""
+            spinner.stop()
+            print("\n")
+            if not output:
+                print(f"\n\nModel: {model}")
+            for chunk in chat_completion:
+                chunk_content = chunk.choices[0].delta.content
+                if chunk_content:
+                    if output or stream==False:
+                        content += chunk_content
+                    else:
+                        print(chunk_content, end="")
 
-            print(formatted_usage, file=sys.stderr)
+            if output:
+                write_to_file(f"{output}_{model}", content)
+            else:
+            # Print all the fetched content on the screen
+                print(content)
 
-    except Exception as e:
-        logger.error(f"Error in get_response: {e}")
+            # Print colored token usage info
+            # Ref Doc: https://codehs.com/tutorial/andy/ansi-colors
+            if token_usage:
+                usage = chunk.x_groq.usage
+
+                formatted_usage = (
+                    "\n\033[92m"
+                    "Token Usage:\n"
+                    "-------------\n"
+                    f"- Completion Tokens: {usage.completion_tokens}\n"
+                    f"- Prompt Tokens: {usage.prompt_tokens}\n"
+                    f"- Total Tokens: {usage.total_tokens}\n\n"
+                    "Timing:\n"
+                    "-------\n"
+                    f"- Completion Time: {usage.completion_time:.3f} seconds\n"
+                    f"- Prompt Time: {usage.prompt_time:.3f} seconds\n"
+                    f"- Queue Time: {usage.queue_time:.3f} seconds\n"
+                    f"- Total Time: {usage.total_time:.3f} seconds\n"
+                    "\033[0m"
+                )
+
+                print(formatted_usage, file=sys.stderr)
+
+
+        except Exception as e:
+            logger.error(f"Error in get_response: {e}")
 
 
 def check_models(api_key):
@@ -204,7 +214,7 @@ def main():
     parser.add_argument(
         "--api_key", "-a", help="API key required for accessing external services"
     )
-    parser.add_argument("--model", "-m", help="Model to send requests to")
+    parser.add_argument("--model", "-m", nargs="+", help="Specify one or more models to use")
     parser.add_argument(
         "--output", "-o", help="allow the user to specify an output file"
     )
@@ -264,7 +274,7 @@ def main():
             resume=resume_content,
             description=description_content,
             api_key=args.api_key,
-            model=args.model,
+            models=args.model,
             temperature=args.temperature,
             max_token=args.maxTokens,
             output=args.output,
