@@ -77,7 +77,7 @@ def usage_error():
 
 # Using Halo as a decorator
 # Ref Doc: https://github.com/manrajgrover/halo?tab=readme-ov-file#usage
-@Halo(text="Processing...", spinner="dots")
+# @Halo(text="Processing...", spinner="dots")
 def get_response(
     resume,
     description,
@@ -88,7 +88,9 @@ def get_response(
     output=None,
     token_usage=False,
 ):
+    spinner=Halo(text="Processing", spinner='dots')
     try:
+        spinner.start()
         if api_key is None:
             raise ValueError("API key is required")
 
@@ -124,10 +126,15 @@ def get_response(
             stream=True,
         )
         content = ""
+        spinner.stop()
+        print("\n")
         for chunk in chat_completion:
             chunk_content = chunk.choices[0].delta.content
             if chunk_content:
-                content += chunk_content
+                if output:
+                    content += chunk_content
+                else:
+                    print(chunk_content, end="")
 
         if output:
             write_to_file(output, content)
@@ -157,9 +164,6 @@ def get_response(
             )
 
             print(formatted_usage, file=sys.stderr)
-
-        if output:
-            write_to_file(output, content)
 
     except Exception as e:
         logger.error(f"Error in get_response: {e}")
