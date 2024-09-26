@@ -199,7 +199,7 @@ def main():
     parser.add_argument(
         "--api_key", "-a", help="API key required for accessing external services"
     )
-    parser.add_argument("--model", "-m", help="Model to send requests to")
+    parser.add_argument("--model", "-m", nargs="+", help="Specify one or more models to use")
     parser.add_argument(
         "--output", "-o", help="allow the user to specify an output file"
     )
