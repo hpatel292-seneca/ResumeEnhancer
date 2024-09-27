@@ -148,7 +148,10 @@ def get_response(
                         print(chunk_content, end="")
 
             if output:
-                write_to_file(f"{output}_{model}", content)
+                if len(output)==1:
+                    write_to_file(f"{output[0]}_{model}.txt", content)
+                else:
+                    write_to_file(f"{output[0]}_{model}.{output[1]}", content)
             elif stream==False:
             # Print all the fetched content on the screen
                 print(content)
@@ -270,6 +273,10 @@ def main():
     try:
         resume_content = read_file(args.resume)
         description_content = read_file(args.description)
+        if args.output:
+            output=args.output.split('.')
+        else:
+            output=None
 
         get_response(
             resume=resume_content,
@@ -278,7 +285,7 @@ def main():
             models=args.model,
             temperature=args.temperature,
             max_token=args.maxTokens,
-            output=args.output,
+            output=output,
             token_usage=args.token_usage,
             stream=args.stream
         )
