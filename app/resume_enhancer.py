@@ -12,6 +12,9 @@ from utils import *
 # Setup logger
 logger = setup_logging()
 
+# Path for the configuration file
+CONFIG_PATH = os.path.expanduser("~/.ResumeEnhancer.toml")
+
 
 def get_version():
     try:
@@ -87,10 +90,10 @@ def get_response(
     max_token=1024,
     output=None,
     token_usage=False,
-    stream=False
+    stream=False,
 ):
-    spinner=Halo(text="Processing", spinner='dots')
-    
+    spinner = Halo(text="Processing", spinner="dots")
+
     if api_key is None:
         raise ValueError("API key is required")
 
@@ -100,15 +103,13 @@ def get_response(
     if description is None:
         raise ValueError("Description is required")
 
-    
     if not models:
         models = ["llama3-8b-8192"]
-    
+
     for model in models:
         print(f"Processing with model: {model}")
         spinner.start()
         try:
-            
             client = Groq(api_key=api_key)
 
             system_message = {
@@ -142,18 +143,18 @@ def get_response(
             for chunk in chat_completion:
                 chunk_content = chunk.choices[0].delta.content
                 if chunk_content:
-                    if output or stream==False:
+                    if output or stream == False:
                         content += chunk_content
                     else:
                         print(chunk_content, end="")
 
             if output:
-                if len(output)==1:
+                if len(output) == 1:
                     write_to_file(f"{output[0]}_{model}.txt", content)
                 else:
                     write_to_file(f"{output[0]}_{model}.{output[1]}", content)
-            elif stream==False:
-            # Print all the fetched content on the screen
+            elif stream == False:
+                # Print all the fetched content on the screen
                 print(content)
 
             # Print colored token usage info
@@ -179,7 +180,6 @@ def get_response(
 
                 print(formatted_usage, file=sys.stderr)
 
-
         except Exception as e:
             logger.error(f"Error in get_response: {e}")
 
@@ -191,14 +191,14 @@ def check_models(api_key):
     print(json.dumps(response.json(), indent=4))
 
 
-def prompt_for_missing_args(args):
-    if not args.api_key:
+def prompt_for_missing_args(args, config):
+    if not args.api_key and not config.get("api_key"):
         args.api_key = input("Please enter your API key: ")
 
-    if not args.resume:
+    if not args.resume and not config.get("resume"):
         args.resume = input("Please enter the path to the resume file: ")
 
-    if not args.description:
+    if not args.description and not config.get("description"):
         args.description = input("Please enter the path to the job description file: ")
 
     return args
@@ -206,6 +206,10 @@ def prompt_for_missing_args(args):
 
 ## Main Function
 def main():
+    # Load configuration from the TOML file
+    config = read_toml_config(CONFIG_PATH)
+
+    # Get CLI args
     parser = argparse.ArgumentParser(
         description="Enhance resume with description", add_help=False
     )
@@ -218,7 +222,9 @@ def main():
     parser.add_argument(
         "--api_key", "-a", help="API key required for accessing external services"
     )
-    parser.add_argument("--model", "-m", nargs="+", help="Specify one or more models to use")
+    parser.add_argument(
+        "--model", "-m", nargs="+", help="Specify one or more models to use"
+    )
     parser.add_argument(
         "--output", "-o", help="allow the user to specify an output file"
     )
@@ -232,9 +238,7 @@ def main():
     parser.add_argument(
         "--token-usage", "-tu", action="store_true", help="Show token usage"
     )
-    parser.add_argument(
-        "--stream", "-s", action="store_true", help="Allow streaming"
-    )
+    parser.add_argument("--stream", "-s", action="store_true", help="Allow streaming")
     args = parser.parse_args()
 
     if args.help:
@@ -245,49 +249,60 @@ def main():
         print(get_version())
         return
 
+    # Apply configuration from TOML file if CLI arguments are not provided
+    api_key = args.api_key or config.get("api_key")
+    resume = args.resume or config.get("resume")
+    description = args.description or config.get("description")
+    models = args.model or config.get("model", ["llama3-8b-8192"])
+    temperature = args.temperature or config.get("temperature", 0.5)
+    max_tokens = args.maxTokens or config.get("maxTokens", 1024)
+    output = args.output or config.get("output", None)
+    token_usage = args.token_usage or config.get("token_usage", False)
+    stream = args.stream or config.get("stream", False)
+
     if args.models:
-        if not args.api_key:
+        if not api_key:
             logger.error("You must specify an API key")
             return
-        check_models(args.api_key)
+        check_models(api_key)
         return
 
-    args = prompt_for_missing_args(args)
+    args = prompt_for_missing_args(args, config)
 
-    if not args.resume:
+    if not resume:
         logger.error("You must provide a resume path for processing")
         return
 
-    if not args.description:
+    if not description:
         logger.error("You must provide a job description file path for processing")
         return
 
-    if not os.path.exists(args.resume):
+    if not os.path.exists(resume):
         logger.error("Could not find resume file at provided path")
         return
 
-    if not os.path.exists(args.description):
+    if not os.path.exists(description):
         logger.error("Could not find description file at provided path")
         return
 
     try:
-        resume_content = read_file(args.resume)
-        description_content = read_file(args.description)
-        if args.output:
-            output=args.output.split('.')
+        resume_content = read_file(resume)
+        description_content = read_file(description)
+        if output:
+            output = output.split(".")
         else:
-            output=None
+            output = None
 
         get_response(
             resume=resume_content,
             description=description_content,
-            api_key=args.api_key,
-            models=args.model,
-            temperature=args.temperature,
-            max_token=args.maxTokens,
+            api_key=api_key,
+            models=models,
+            temperature=temperature,
+            max_token=max_tokens,
             output=output,
-            token_usage=args.token_usage,
-            stream=args.stream
+            token_usage=token_usage,
+            stream=stream,
         )
     except Exception as e:
         logger.error(f"Error: {e}")
