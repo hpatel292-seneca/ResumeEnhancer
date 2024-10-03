@@ -7,7 +7,9 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Usage](#usage)
-  - [Requirements](#prerequisties)
+  - [Prerequisites](#prerequisites)
+  - [Setup Instructions](#setup-instructions)
+  - [Configuration File Usage](#configuration-file-usage)
   - [Options](#options)
 - [Error Handling](#error-handling)
 - [Logging](#logging)
@@ -34,15 +36,15 @@ The **Resume Enhancer** is a command-line interface (CLI) tool designed to optim
 
 You can use this tool by running it locally. Clone the repository and directly on your computer.
 
-### Prerequisties
+### Prerequisites
 
 1. **Python3**: Ensure `Python` is installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
 2. **Git**: Ensure Git is installed on your system. You can download it from [git-scm.com](https://git-scm.com/).
-3. **groq API Key**: You need groq API key to use this tool. You can get API Key from [groq](https://console.groq.com/playground)
+3. **Groq API Key**: You need a Groq API key to use this tool. You can get an API Key from [Groq](https://console.groq.com/playground).
 
 ### Setup Instructions
 
-#### 1. Clone the Repository.
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/hpatel292-seneca/ResumeEnhancer
@@ -51,21 +53,77 @@ cd ResumeEnhancer
 
 #### 2. Install Required Dependencies
 
-Install the necessary Python packges using pip
+Install the necessary Python packages using pip:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-This will install all required dependencies
+This will install all required dependencies.
 
-#### 3. Running the CLI tool locally
+#### 3. Running the CLI Tool Locally
 
 Once the dependencies are installed, you can run the tool locally.
 
 ```bash
 python app/resume_enhancer.py --resume path_to_resume --description path_to_description --api_key groq_api_key
 ```
+
+### Configuration File Usage
+
+This tool allows you to specify various settings through a configuration file, `~/.ResumeEnhancer.toml`, which can simplify your command-line usage and help manage your options in a centralized manner.
+
+The configuration file should be created in your home directory and it is read upon execution. It allows you to set default values for various parameters such as the API key, paths to files, model options, and more.
+
+#### Configuration File Format
+
+The configuration file should be in TOML format. Below is an example of a configuration file (`~/.ResumeEnhancer.toml`):
+
+```toml
+api_key = "your_api_key_here"
+resume = "path/to/your/resume.pdf"
+description = "path/to/your/job_description.txt"
+model = ["llama3-8b-8192"]
+temperature = 0.5
+maxTokens = 1024
+output = "output/result.txt"
+token_usage = true
+stream = false
+```
+
+#### Specifying Paths
+
+##### Absolute Paths
+
+You can specify absolute paths in the configuration file. An absolute path points to a location in the file system from the root directory, which means it will always refer to the same file regardless of the current working directory.
+
+**Example of an absolute path**:
+
+```toml
+resume = "/Users/username/Documents/my_resume.pdf"
+description = "/Users/username/Documents/job_description.txt"
+```
+
+##### Relative Paths
+
+You can also specify relative paths. A relative path points to a location relative to the current working directory from which you are running the tool. This can be useful for portability, allowing you to share your configuration without worrying about absolute paths that might differ between systems.
+
+**Example of a relative path**:
+
+```toml
+resume = "documents/my_resume.pdf"
+description = "documents/job_description.txt"
+```
+
+When using relative paths, ensure that the specified files are located in the correct directories relative to the directory from which you execute the tool.
+
+#### Using the Configuration File
+
+1. **Create the Configuration File**: Create a file named `.ResumeEnhancer.toml` in your project directory or any accessible directory.
+2. **Fill in the Details**: Use the example format provided above to fill in the necessary details based on your requirements.
+3. **Run the Tool**: Execute the tool. The configuration file will be automatically read, and any settings specified in the file will be applied.
+
+> **NOTE:** The default configuration would be overwritten by command line arguments if they are specified at runtime.
 
 ### Options
 
