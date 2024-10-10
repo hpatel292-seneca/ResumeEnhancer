@@ -23,61 +23,6 @@ def get_version():
         logger.error("Failed to get_version", e)
 
 
-def get_help():
-    ascii_log = """
- ____                                _____       _                               
-|  _ \ ___  ___ _   _ _ __ ___   ___| ____|_ __ | |__   __ _ _ __   ___ ___ _ __ 
-| |_) / _ \/ __| | | | '_ ` _ \ / _ \  _| | '_ \| '_ \ / _` | '_ \ / __/ _ \ '__|
-|  _ <  __/\__ \ |_| | | | | | |  __/ |___| | | | | | | (_| | | | | (_|  __/ |   
-|_| \_\___||___/\__,_|_| |_| |_|\___|_____|_| |_|_| |_|\__,_|_| |_|\___\___|_|   
-    """
-    try:
-        return f"""
-        {ascii_log}
-
-        {TOOL_NAME} - A CLI tool for enhancing resumes based on job descriptions
-
-        Usage:
-        py app/resume_enhancer.py [options]
-
-        Options:
-        -h, --help            Show this help message
-        -v, --version         Print version
-        --models              List available models
-        --resume              Input resume (pdf, txt, docx, doc) (Required)
-        --description         Input job description (pdf, txt, docx, doc) (Required)
-        --api_key, -a         Input Groq API key (Required)
-        -m, --model           Specify model to use 
-        -o, --output          Output to specified file (txt or json)
-        -t, --temperature     Set completion randomness (default 0.5)
-        -mt, --maxTokens      Maximum number of tokens (default 1024)
-        --token-usage         Print token usage information
-
-        Examples:
-        1. Basic Usage:
-           py app/resume_enhancer.py --resume resume.docx --description description.txt --api_key YOUR_API_KEY
-
-        2. Specify Model and Output:
-           py app/resume_enhancer.py --resume resume.pdf --description description.pdf --api_key YOUR_API_KEY --model llama3-8b-8192 --output output.txt
-
-        Note: Get your Groq API key from https://groq.com/developers
-        """
-    except Exception as e:
-        logger.error("Failed to get_help", e)
-
-
-def usage_error():
-    try:
-        return f"""
-        Error: Incorrect usage of {TOOL_NAME}.
-
-        Usage:
-        py app/resume_enhancer.py [options]
-        """
-    except Exception as e:
-        logger.error("Failed to usage_error", e)
-
-
 # Using Halo as a decorator
 # Ref Doc: https://github.com/manrajgrover/halo?tab=readme-ov-file#usage
 # @Halo(text="Processing...", spinner="dots")
@@ -191,25 +136,18 @@ def check_models(api_key):
     print(json.dumps(response.json(), indent=4))
 
 
-def prompt_for_missing_args(args, config):
-    if not args.api_key and not config.get("api_key"):
-        args.api_key = input("Please enter your API key: ")
+def prompt_for_missing_args(cli_arguments, config):
+    if not cli_arguments.api_key and not config.get("api_key"):
+        cli_arguments.api_key = input("Please enter your API key: ")
 
-    if not args.resume and not config.get("resume"):
-        args.resume = input("Please enter the path to the resume file: ")
+    if not cli_arguments.resume and not config.get("resume"):
+        cli_arguments.resume = input("Please enter the path to the resume file: ")
 
-    if not args.description and not config.get("description"):
-        args.description = input("Please enter the path to the job description file: ")
+    if not cli_arguments.description and not config.get("description"):
+        cli_arguments.description = input("Please enter the path to the job description file: ")
 
-    return args
-
-
-## Main Function
-def main():
-    # Load configuration from the TOML file
-    config = read_toml_config(CONFIG_PATH)
-
-    # Get CLI args
+    return cli_arguments
+def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Enhance resume with description", add_help=False
     )
@@ -239,35 +177,43 @@ def main():
         "--token-usage", "-tu", action="store_true", help="Show token usage"
     )
     parser.add_argument("--stream", "-s", action="store_true", help="Allow streaming")
-    args = parser.parse_args()
+    return parser.parse_args()
 
-    if args.help:
+## Main Function
+def main():
+    # Load configuration from the TOML file
+    config = read_toml_config(CONFIG_PATH)
+
+    # Get CLI cli_arguments
+    cli_arguments = parse_arguments()
+
+    if cli_arguments.help:
         print(get_help())
         return
 
-    if args.version:
+    if cli_arguments.version:
         print(get_version())
         return
 
     # Apply configuration from TOML file if CLI arguments are not provided
-    api_key = args.api_key or config.get("api_key")
-    resume = args.resume or config.get("resume")
-    description = args.description or config.get("description")
-    models = args.model or config.get("model", ["llama3-8b-8192"])
-    temperature = args.temperature or config.get("temperature", 0.5)
-    max_tokens = args.maxTokens or config.get("maxTokens", 1024)
-    output = args.output or config.get("output", None)
-    token_usage = args.token_usage or config.get("token_usage", False)
-    stream = args.stream or config.get("stream", False)
+    api_key = cli_arguments.api_key or config.get("api_key")
+    resume = cli_arguments.resume or config.get("resume")
+    description = cli_arguments.description or config.get("description")
+    models = cli_arguments.model or config.get("model", ["llama3-8b-8192"])
+    temperature = cli_arguments.temperature or config.get("temperature", 0.5)
+    max_tokens = cli_arguments.maxTokens or config.get("maxTokens", 1024)
+    output = cli_arguments.output or config.get("output", None)
+    token_usage = cli_arguments.token_usage or config.get("token_usage", False)
+    stream = cli_arguments.stream or config.get("stream", False)
 
-    if args.models:
+    if cli_arguments.models:
         if not api_key:
             logger.error("You must specify an API key")
             return
         check_models(api_key)
         return
 
-    args = prompt_for_missing_args(args, config)
+    cli_arguments = prompt_for_missing_args(cli_arguments, config)
 
     if not resume:
         logger.error("You must provide a resume path for processing")
@@ -286,16 +232,16 @@ def main():
         return
 
     try:
-        resume_content = read_file(resume)
-        description_content = read_file(description)
+        parsed_resume_content = read_file(resume)
+        parsed_job_description = read_file(description)
         if output:
             output = output.split(".")
         else:
             output = None
 
         get_response(
-            resume=resume_content,
-            description=description_content,
+            resume=parsed_resume_content,
+            description=parsed_job_description,
             api_key=api_key,
             models=models,
             temperature=temperature,
