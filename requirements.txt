@@ -27,3 +27,6 @@ tomli==2.0.2
 tqdm==4.66.5
 typing_extensions==4.12.2
 urllib3==2.2.3
+black==24.10.0
+flake8
+pre-commit==4.0.1

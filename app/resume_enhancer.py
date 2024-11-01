@@ -4,10 +4,10 @@ import os
 import sys
 
 import requests
-from config import *
+from config import TOOL_NAME, VERSION
 from groq import Groq
 from halo import Halo
-from utils import *
+from utils import write_to_file, read_file, setup_logging, read_toml_config, get_help
 
 # Setup logger
 logger = setup_logging()
@@ -88,7 +88,7 @@ def get_response(
             for chunk in chat_completion:
                 chunk_content = chunk.choices[0].delta.content
                 if chunk_content:
-                    if output or stream == False:
+                    if output or stream is False:
                         content += chunk_content
                     else:
                         print(chunk_content, end="")
@@ -98,7 +98,7 @@ def get_response(
                     write_to_file(f"{output[0]}_{model}.txt", content)
                 else:
                     write_to_file(f"{output[0]}_{model}.{output[1]}", content)
-            elif stream == False:
+            elif stream is False:
                 # Print all the fetched content on the screen
                 print(content)
 
@@ -144,9 +144,13 @@ def prompt_for_missing_args(cli_arguments, config):
         cli_arguments.resume = input("Please enter the path to the resume file: ")
 
     if not cli_arguments.description and not config.get("description"):
-        cli_arguments.description = input("Please enter the path to the job description file: ")
+        cli_arguments.description = input(
+            "Please enter the path to the job description file: "
+        )
 
     return cli_arguments
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Enhance resume with description", add_help=False
@@ -178,6 +182,7 @@ def parse_arguments():
     )
     parser.add_argument("--stream", "-s", action="store_true", help="Allow streaming")
     return parser.parse_args()
+
 
 ## Main Function
 def main():

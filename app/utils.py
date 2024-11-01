@@ -5,8 +5,7 @@ import tomllib
 from colorama import Fore, Style
 from docx import Document
 from PyPDF2 import PdfReader
-from config import *
-
+from config import TOOL_NAME
 
 
 # Custom formatter for colorized logging
@@ -91,8 +90,10 @@ def setup_logging():
 
     return logger
 
+
 # Setup logger
 logger = setup_logging()
+
 
 # Read configuration from TOML file
 def read_toml_config(config_path):
@@ -110,13 +111,14 @@ def read_toml_config(config_path):
         logger.error(f"Failed to read config file: {e}")
         return {}
 
+
 def get_help():
-    ascii_log = """
- ____                                _____       _                               
-|  _ \ ___  ___ _   _ _ __ ___   ___| ____|_ __ | |__   __ _ _ __   ___ ___ _ __ 
+    ascii_log = r"""
+ ____                                _____       _
+|  _ \ ___  ___ _   _ _ __ ___   ___| ____|_ __ | |__   __ _ _ __   ___ ___ _ __
 | |_) / _ \/ __| | | | '_ ` _ \ / _ \  _| | '_ \| '_ \ / _` | '_ \ / __/ _ \ '__|
-|  _ <  __/\__ \ |_| | | | | | |  __/ |___| | | | | | | (_| | | | | (_|  __/ |   
-|_| \_\___||___/\__,_|_| |_| |_|\___|_____|_| |_|_| |_|\__,_|_| |_|\___\___|_|   
+|  _ <  __/\__ \ |_| | | | | | |  __/ |___| | | | | | | (_| | | | | (_|  __/ |
+|_| \_\___||___/\__,_|_| |_| |_|\___|_____|_| |_|_| |_|\__,_|_| |_|\___\___|_|
     """
     try:
         return f"""
@@ -134,7 +136,7 @@ def get_help():
         --resume              Input resume (pdf, txt, docx, doc) (Required)
         --description         Input job description (pdf, txt, docx, doc) (Required)
         --api_key, -a         Input Groq API key (Required)
-        -m, --model           Specify model to use 
+        -m, --model           Specify model to use
         -o, --output          Output to specified file (txt or json)
         -t, --temperature     Set completion randomness (default 0.5)
         -mt, --maxTokens      Maximum number of tokens (default 1024)
@@ -149,6 +151,7 @@ def get_help():
 
         Note: Get your Groq API key from https://groq.com/developers
         """
+
     except Exception as e:
         logger.error("Failed to get_help", e)
 

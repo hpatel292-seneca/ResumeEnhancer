@@ -7,13 +7,10 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Usage](#usage)
-  - [Prerequisites](#prerequisites)
-  - [Setup Instructions](#setup-instructions)
-  - [Configuration File Usage](#configuration-file-usage)
-  - [Options](#options)
+- [Configuration File Usage](#configuration-file-usage)
+- [Options](#options)
 - [Error Handling](#error-handling)
 - [Logging](#logging)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
@@ -34,36 +31,7 @@ The **Resume Enhancer** is a command-line interface (CLI) tool designed to optim
 
 ## Usage
 
-You can use this tool by running it locally. Clone the repository and directly on your computer.
-
-### Prerequisites
-
-1. **Python3**: Ensure `Python` is installed on your system. You can download it from [python.org](https://www.python.org/downloads/).
-2. **Git**: Ensure Git is installed on your system. You can download it from [git-scm.com](https://git-scm.com/).
-3. **Groq API Key**: You need a Groq API key to use this tool. You can get an API Key from [Groq](https://console.groq.com/playground).
-
-### Setup Instructions
-
-#### 1. Clone the Repository
-
-```bash
-git clone https://github.com/hpatel292-seneca/ResumeEnhancer
-cd ResumeEnhancer
-```
-
-#### 2. Install Required Dependencies
-
-Install the necessary Python packages using pip:
-
-```bash
-pip install -r requirements.txt
-```
-
-This will install all required dependencies.
-
-#### 3. Running the CLI Tool Locally
-
-Once the dependencies are installed, you can run the tool locally.
+You can use this tool by running it locally. Clone the repository and directly run the tool on your computer.
 
 ```bash
 python app/resume_enhancer.py --resume path_to_resume --description path_to_description --api_key groq_api_key
@@ -117,14 +85,6 @@ description = "documents/job_description.txt"
 
 When using relative paths, ensure that the specified files are located in the correct directories relative to the directory from which you execute the tool.
 
-#### Using the Configuration File
-
-1. **Create the Configuration File**: Create a file named `.ResumeEnhancer.toml` in your project directory or any accessible directory.
-2. **Fill in the Details**: Use the example format provided above to fill in the necessary details based on your requirements.
-3. **Run the Tool**: Execute the tool. The configuration file will be automatically read, and any settings specified in the file will be applied.
-
-> **NOTE:** The default configuration would be overwritten by command line arguments if they are specified at runtime.
-
 ### Options
 
 | Option          | Shortcut | Type   | Description                                                                               | Default          |
@@ -152,16 +112,10 @@ When using relative paths, ensure that the specified files are located in the co
 
 The tool uses a logging system to track errors and important events. Logs are generated using the Python logging module and can be customized by modifying the `setup_logging()` function in the `utils` module.
 
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/your-feature`.
-3. Commit your changes: `git commit -am 'Add new feature'`.
-4. Push to the branch: `git push origin feature/your-feature`.
-5. Create a new Pull Request.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+```
+
+```
