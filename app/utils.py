@@ -3,8 +3,8 @@ import os
 
 import tomllib
 from colorama import Fore, Style
-from docx import Document
-from PyPDF2 import PdfReader
+from docx import Document  # type: ignore
+from pypdf import PdfReader  # type: ignore
 from config import TOOL_NAME
 
 

@@ -16,7 +16,7 @@ lxml==5.3.0
 openai==1.46.0
 pydantic==2.9.2
 pydantic_core==2.23.4
-PyPDF2==3.0.1
+pypdf
 python-docx==1.1.2
 requests==2.32.3
 six==1.16.0
@@ -30,3 +30,5 @@ urllib3==2.2.3
 black==24.10.0
 flake8
 pre-commit==4.0.1
+pytest==8.3.3
+pytest-xdist==3.6.1

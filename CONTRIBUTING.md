@@ -15,6 +15,7 @@ Thank you for considering contributing to Resume Enhancer! This guide provides i
   - [Install Required Dependencies](#2-install-required-dependencies)
   - [Running the CLI Tool Locally](#3-running-the-cli-tool-locally)
   - [Running formatter](#4-Formatter)
+  - [Testing](#6-testing)
 - [I Have a Question](#i-have-a-question)
 - [I Want to Contribute](#i-want-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
@@ -81,6 +82,37 @@ chmod +x lint.sh
 
 ./lint.sh
 ```
+
+### 6. Testing
+
+#### Running a Single Test or Test File
+
+To run the tests use `pytest`. Naming of the test file should follow the naming convention `test_filename.py` and test cases of a function should be code in class `test_functionName.py`.
+
+1. **Run a Single Test File**:
+   To run a specific test file:
+
+   ```bash
+   pytest tests/test_file.py
+   ```
+
+2. **Run a Specific Test Function in a File**:
+   To run a single test function within a file:
+   ```bash
+   pytest tests/test_file.py::className::test_function_name
+   ```
+   This command allows you to focus on a particular test function.
+
+### Automatically Run Tests on Code Changes
+
+To rerun tests automatically whenever you modify code or tests, you can use the `pytest-xdist` plugin:
+
+- **Run `pytest` in Watch Mode**:
+  Use the `--looponfail` option to rerun only failing tests automatically whenever the code changes:
+  ```bash
+  pytest --looponfail
+  ```
+  This option will watch test file and source code, automatically rerunning tests each time a file is updated.
 
 ## I Have a Question
 

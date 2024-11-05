@@ -3,10 +3,10 @@ import json
 import os
 import sys
 
-import requests
+import requests  # type: ignore
 from config import TOOL_NAME, VERSION
-from groq import Groq
-from halo import Halo
+from groq import Groq  # type: ignore
+from halo import Halo  # type: ignore
 from utils import write_to_file, read_file, setup_logging, read_toml_config, get_help
 
 # Setup logger
