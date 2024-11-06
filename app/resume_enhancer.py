@@ -59,7 +59,7 @@ def get_response(
 
             system_message = {
                 "role": "system",
-                "content": "You are an AI assistant specializing in optimizing resumes to align with specific job descriptions...",
+                "content": "You are a specialized AI assistant focused on optimizing resumes to closely align with specific job descriptions. Given the resume content and job description provided, analyze both documents in detail. Identify specific skills, experiences, keywords, and relevant achievements that should be emphasized, modified, or added in the resume to increase alignment with the job requirements. Highlight any key qualifications or terminology missing in the resume that would strengthen the candidate's match for the role. Provide actionable suggestions to enhance clarity, relevance, and impact.",
             }
 
             user_message = {
