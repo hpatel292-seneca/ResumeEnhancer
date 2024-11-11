@@ -55,7 +55,7 @@ def read_pdf_file(file_path):
 def read_word_file(file_path):
     doc = Document(file_path)
     content = "\n".join([para.text for para in doc.paragraphs])
-    return content
+    return "Hello" + content
 
 
 def read_file(file_path):
