@@ -1,0 +1,49 @@
+name: ResumeEnhancer CI Pipeline test, lint, and flake
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      # Run formatting
+      - name: Run format.sh
+        run: ./format.sh
+        continue-on-error: false  # Explicitly fail if this step fails
+
+      # Run linting
+      - name: Run lint.sh
+        run: ./lint.sh
+        continue-on-error: false  # Explicitly fail if this step fails
+        
+      # Run tests
+      - name: Run Tests
+        run: |
+          pytest
