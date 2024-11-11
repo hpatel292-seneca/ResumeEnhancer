@@ -1,4 +1,4 @@
-from utils import read_txt_file
+from utils import read_txt_file, read_pdf_file
 from unittest import mock
 import pytest
 
@@ -22,3 +22,23 @@ class Test_read_txt_file:
     def test_read_txt_file_empty(self, mock_open):
         result = read_txt_file("empty.txt")
         assert result == ""
+
+
+# Test read_pdf_file function
+class Test_read_pdf_file:
+    @mock.patch("utils.open", new_callable=mock.mock_open, read_data=b"%PDF-1.4")
+    @mock.patch("utils.PdfReader")
+    def test_read_pdf_file_valid(self, mock_pdf_reader, mock_open):
+        # Mocking PdfReader to simulate PDF content
+        mock_reader_instance = mock_pdf_reader.return_value
+        mock_reader_instance.pages = [
+            mock.Mock(extract_text=mock.Mock(return_value="Page content"))
+        ]
+
+        result = read_pdf_file("dummy.pdf")
+        assert result == "Page content"
+
+    @mock.patch("utils.open", side_effect=FileNotFoundError)
+    def test_read_pdf_file_not_found(self, mock_open):
+        with pytest.raises(FileNotFoundError):
+            read_pdf_file("missing.pdf")
