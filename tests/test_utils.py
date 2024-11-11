@@ -1,4 +1,4 @@
-from utils import read_txt_file, read_pdf_file
+from utils import read_txt_file, read_pdf_file, read_word_file
 from unittest import mock
 import pytest
 
@@ -42,3 +42,23 @@ class Test_read_pdf_file:
     def test_read_pdf_file_not_found(self, mock_open):
         with pytest.raises(FileNotFoundError):
             read_pdf_file("missing.pdf")
+
+
+# Test read_word_file function
+class Test_read_word_file:
+    @mock.patch("utils.Document")
+    def test_read_word_file_valid(self, mock_document):
+        # Mocking Document to simulate Word content
+        mock_doc_instance = mock_document.return_value
+        mock_doc_instance.paragraphs = [
+            mock.Mock(text="Paragraph 1"),
+            mock.Mock(text="Paragraph 2"),
+        ]
+
+        result = read_word_file("dummy.docx")
+        assert result == "Paragraph 1\nParagraph 2"
+
+    @mock.patch("utils.Document", side_effect=FileNotFoundError)
+    def test_read_word_file_not_found(self, mock_document):
+        with pytest.raises(FileNotFoundError):
+            read_word_file("missing.docx")
