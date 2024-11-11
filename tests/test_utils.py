@@ -1,4 +1,4 @@
-from utils import read_txt_file, read_pdf_file, read_word_file
+from utils import read_txt_file, read_pdf_file, read_word_file, read_file
 from unittest import mock
 import pytest
 
@@ -62,3 +62,25 @@ class Test_read_word_file:
     def test_read_word_file_not_found(self, mock_document):
         with pytest.raises(FileNotFoundError):
             read_word_file("missing.docx")
+
+
+# Test read_file function
+class Test_read_file:
+    @mock.patch("utils.read_txt_file", return_value="Text content")
+    def test_read_file_txt(self, mock_read_txt):
+        result = read_file("dummy.txt")
+        assert result == "Text content"
+
+    @mock.patch("utils.read_pdf_file", return_value="PDF content")
+    def test_read_file_pdf(self, mock_read_pdf):
+        result = read_file("dummy.pdf")
+        assert result == "PDF content"
+
+    @mock.patch("utils.read_word_file", return_value="Word content")
+    def test_read_file_word(self, mock_read_word):
+        result = read_file("dummy.docx")
+        assert result == "Word content"
+
+    def test_read_file_unsupported(self):
+        with pytest.raises(ValueError, match="Unsupported file type: .unknown"):
+            read_file("dummy.unknown")
