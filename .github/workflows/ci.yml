@@ -2,9 +2,9 @@ name: ResumeEnhancer CI Pipeline test, lint, and flake
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -32,17 +32,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
+      # Make format.sh and lint.sh executable
+      - name: Make scripts executable
+        run: chmod +x ./format.sh ./lint.sh
+
       # Run formatting
       - name: Run format.sh
         run: ./format.sh
-        continue-on-error: false  # Explicitly fail if this step fails
+        continue-on-error: false
 
       # Run linting
       - name: Run lint.sh
         run: ./lint.sh
-        continue-on-error: false  # Explicitly fail if this step fails
-        
+        continue-on-error: false
+
       # Run tests
       - name: Run Tests
         run: |
