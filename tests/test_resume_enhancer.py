@@ -25,7 +25,7 @@ class Test_GetResponse:
                         completion_tokens=100,
                         prompt_tokens=50,
                         total_tokens=150,
-                        comTestpletion_time=0.35,
+                        completion_time=0.35,
                         prompt_time=0.15,
                         queue_time=0.1,
                         total_time=0.6,
