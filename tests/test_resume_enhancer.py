@@ -1,7 +1,9 @@
-from resume_enhancer import get_response  # type: ignore
+from resume_enhancer import get_response, get_version  # type: ignore
+from config import TOOL_NAME, VERSION  # type: ignore
 from unittest import mock
 from io import StringIO
 import pytest  # type: ignore
+
 
 ## Test get_response from resume_enhancer.get_response
 
@@ -156,3 +158,9 @@ class Test_GetResponse:
         assert "- Prompt Time: 0.150 seconds" in stderr_output
         assert "- Queue Time: 0.100 seconds" in stderr_output
         assert "- Total Time: 0.600 seconds" in stderr_output
+
+    def test_get_version(self):
+        # Test that the version is returned correctly
+        assert TOOL_NAME == "Resume Enhancer Tool"
+        assert VERSION == "0.1.0"
+        assert get_version() == f"{TOOL_NAME} {VERSION}"
