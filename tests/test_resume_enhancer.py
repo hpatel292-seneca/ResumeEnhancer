@@ -159,7 +159,7 @@ class Test_GetResponse:
         assert "- Queue Time: 0.100 seconds" in stderr_output
         assert "- Total Time: 0.600 seconds" in stderr_output
 
-    def test_get_version():
+    def test_get_version(self):
         # Test that the version is returned correctly
         assert TOOL_NAME == "Resume Enhancer Tool"
         assert VERSION == "0.1.0"
