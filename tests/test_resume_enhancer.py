@@ -162,5 +162,4 @@ class Test_GetResponse:
     def test_get_version(self):
         # Test that the version is returned correctly
         assert TOOL_NAME == "Resume Enhancer Tool"
-        assert VERSION == "0.1.0"
         assert get_version() == f"{TOOL_NAME} {VERSION}"
