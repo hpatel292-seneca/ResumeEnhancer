@@ -29,11 +29,36 @@ The **Resume Enhancer** is a command-line interface (CLI) tool designed to optim
 
 ## Usage
 
-You can use this tool by running it locally. Clone the repository and directly run the tool on your computer.
+### Installing via PyPI
 
-```bash
-python app/resume_enhancer.py --resume path_to_resume --description path_to_description --api_key groq_api_key
-```
+1. **Open Terminal/Command Prompt**.
+2. **Install the Tool**:
+
+   ```bash
+   pip install resume-enhancer
+   ```
+
+3. **Verify Installation**:
+   To check if the tool was installed correctly, run:
+
+   ```bash
+   resume-enhancer --version
+   ```
+
+   If successful, this will display the version of the tool.
+
+4. **View Available Commands**:
+   To view the commands and their descriptions:
+
+   ```bash
+   resume-enhancer --help
+   ```
+
+5. Enhancing Resume:
+
+   ```bash
+   resume_enhancer --resume path_to_resume --description path_to_description --api_key groq_api_key
+   ```
 
 ### Configuration File Usage
 
