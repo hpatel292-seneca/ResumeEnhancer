@@ -1,5 +1,3 @@
-![Resume Enhancer Logo](https://github.com/hpatel292-seneca/ResumeEnhancer/blob/main/assets/logo.png)
-
 # Resume Enhancer CLI Tool
 
 ## Table of Contents
@@ -114,7 +112,7 @@ The tool uses a logging system to track errors and important events. Logs are ge
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/hpatel292-seneca/ResumeEnhancer/blob/main/LICENSE) file for details.
 
 ```
 

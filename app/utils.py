@@ -5,7 +5,7 @@ import tomllib
 from colorama import Fore, Style
 from docx import Document  # type: ignore
 from pypdf import PdfReader  # type: ignore
-from config import TOOL_NAME
+from app.config import TOOL_NAME
 
 
 # Custom formatter for colorized logging

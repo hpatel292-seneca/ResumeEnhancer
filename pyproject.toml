@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "resume-enhancer"
+dynamic = ["version"]
+description = "A CLI tool for optimizing and tailoring resumes based on job descriptions using AI."
+readme = "README.md"
+readme-content-type = "text/markdown"
+license = {text = "MIT"}
+authors = [
+    { name = "Harshil Patel", email = "26harshilpatel11@gmail.com" }
+]
+homepage = "https://github.com/hpatel292-seneca/ResumeEnhancer"
+requires-python = ">=3.11"
+dependencies = [
+    "annotated-types==0.7.0",
+    "anyio==4.5.0",
+    "certifi==2024.8.30",
+    "charset-normalizer==3.3.2",
+    "colorama==0.4.6",
+    "distro==1.9.0",
+    "groq==0.11.0",
+    "h11==0.14.0",
+    "halo==0.0.31",
+    "httpcore==1.0.5",
+    "httpx==0.27.2",
+    "idna==3.10",
+    "jiter==0.5.0",
+    "log-symbols==0.0.14",
+    "lxml==5.3.0",
+    "openai==1.46.0",
+    "pydantic==2.9.2",
+    "pydantic_core==2.23.4",
+    "pypdf",
+    "python-docx==1.1.2",
+    "requests==2.32.3",
+    "six==1.16.0",
+    "sniffio==1.3.1",
+    "spinners==0.0.24",
+    "termcolor==2.4.0",
+    "tomli==2.0.2",
+    "tqdm==4.66.5",
+    "typing_extensions==4.12.2",
+    "urllib3==2.2.3"
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==24.10.0",
+    "flake8",
+    "pre-commit==4.0.1",
+    "pytest==8.3.3",
+    "pytest-xdist==3.6.1"
+]
+
+[project.scripts]
+resume-enhancer = "app.resume_enhancer:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# Dynamic versioning using Hatchling
+[tool.hatch.version]
+path = "app/_version.py"
